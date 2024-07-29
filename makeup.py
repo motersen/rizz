@@ -40,7 +40,7 @@ def conceal(page, rects):
 
 ## replace with chord symbol pdf
 def replace(page, rects):
-    for c in range(len(chords)-1):
+    for c in range(len(chords)):
         chord = pymupdf.open(f"pdf/{c+1}.pdf")
         for rec in rects[c]:
             page.show_pdf_page(rec - (rec.height,
