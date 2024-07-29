@@ -33,10 +33,8 @@ def conceal(page, rects):
     sh = page.new_shape()
     for rect in [instance for c in rects for instance in c]:
         sh.draw_rect(rect)
-    # sh.finish(color=(1,0,0))
     sh.finish(color=(1,1,1), fill=(1,1,1))
     sh.commit()
-
 
 ## replace with chord symbol pdf
 def replace(page, rects):
