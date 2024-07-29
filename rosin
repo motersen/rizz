@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ ${#@} -lt 2 ]; then
+	echo "Not enough arguments";
+	exit -1;
+fi
+
+CHORDS=$1
+PDF=$2
+
+rosin-tune.pl "$CHORDS" && rosin-play.py "$PDF"
