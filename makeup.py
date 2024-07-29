@@ -1,4 +1,5 @@
 import sys
+import os.path
 import re
 import pymupdf
 
@@ -56,4 +57,5 @@ for page in doc:
     conceal(page, rects)
     replace(page, rects)
 
-doc.save("nb-e.pdf")
+out = sys.argv[2] if len(sys.argv) > 2 else os.path.splitext(sys.argv[1])[0] + "-chords.pdf"
+doc.save(out)
