@@ -1,4 +1,5 @@
 import sys
+import re
 import pymupdf
 
 try:
@@ -40,12 +41,14 @@ def conceal(page, rects):
 def replace(page, rects):
     for c in range(len(chords)):
         chord = pymupdf.open(f"pdf/{c+1}.pdf")
+        slashc = re.search("/[A-H]", chords[c])
         for rec in rects[c]:
-            page.show_pdf_page(rec - (rec.height,
-                                       .2 * rec.height,
-                                       0,
-                                       .2 * rec.height),
-                            chord, 0)
+            ## slashchords are taller and need more vertical space
+            page.show_pdf_page(rec - (0,
+                                      rec.height - .4 * rec.height if slashc else 0,
+                                      0,
+                                      - .4 * rec.height if slashc else 0),
+                               chord, 0)
         chord.close()
 
 for page in doc:
