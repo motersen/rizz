@@ -48,9 +48,3 @@ closedir $dir;
 for my $pdf (@pdffiles) {
   system("pdfcrop", $pdf, $pdf);
 }
-
-# chdir $top;
-# mkdir "img" unless -d "img";
-
-# system(qw:mogrify -path img/ -density 300 -trim +repage:,
-#      qw:-background white -flatten -format png:, @pdffiles);
