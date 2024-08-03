@@ -1,17 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import os.path
 import re
 import pymupdf
 
 try:
-    doc = pymupdf.open(sys.argv[1])
+    [chord_list, pdf] = sys.argv[1:3]
+except ValueError:
+    print("Not enough arguments")
+    sys.exit(1)
+
+out = sys.argv[3] if len(sys.argv) > 3 else os.path.splitext(pdf)[0] + "-chords.pdf"
+
+try:
+    doc = pymupdf.open(pdf)
 except pymupdf.FileNotFoundError as E:
     for a in E.args: print(a)
     sys.exit(1)
 
 try:
-    with open("chords.txt") as f:
+    with open(chord_list) as f:
         chords = f.read().splitlines()
 except OSError as E:
     print(f"Could not open '{E.filename}': {E.strerror}")
@@ -59,5 +67,4 @@ for page in doc:
     conceal(page, rects)
     replace(page, rects)
 
-out = sys.argv[2] if len(sys.argv) > 2 else os.path.splitext(sys.argv[1])[0] + "-chords.pdf"
 doc.save(out)

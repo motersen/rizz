@@ -8,4 +8,5 @@ fi
 CHORDS=$1
 PDF=$2
 
-rosin-tune.pl "$CHORDS" && rosin-play.py "$PDF"
+rosin-tune.pl "$CHORDS" \
+	&& rosin-play.py "$CHORDS" "$PDF" ${3:+"$3"}
