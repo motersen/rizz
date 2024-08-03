@@ -46,8 +46,9 @@ def replace(page, rects):
         slashc = re.search("/[A-H]", chords[c])
         for rec in rects[c]:
             ## slashchords are taller and need more vertical space
+            ## double rectangle height and move bottom border down by 2/5 orig. height
             page.show_pdf_page(rec - (0,
-                                      rec.height - .4 * rec.height if slashc else 0,
+                                      .6 * rec.height if slashc else 0,
                                       0,
                                       - .4 * rec.height if slashc else 0),
                                chord, 0)
