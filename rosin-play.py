@@ -8,14 +8,14 @@ try:
     doc = pymupdf.open(sys.argv[1])
 except pymupdf.FileNotFoundError as E:
     for a in E.args: print(a)
-    sys.exit()
+    sys.exit(1)
 
 try:
     with open("chords.txt") as f:
         chords = f.read().splitlines()
 except OSError as E:
     print(f"Could not open '{E.filename}': {E.strerror}")
-    sys.exit()
+    sys.exit(1)
 
 ## collect rects for occurences of target chords
 def collect(page):

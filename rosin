@@ -2,7 +2,7 @@
 
 if [ ${#@} -lt 2 ]; then
 	echo "Not enough arguments";
-	exit -1;
+	exit 1;
 fi
 
 CHORDS=$1
