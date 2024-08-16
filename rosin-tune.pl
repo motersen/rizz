@@ -8,10 +8,44 @@ use v5.34;
 use Cwd qw/getcwd abs_path/;
 
 my $top = getcwd;
-my $chords_file = shift @ARGV or die "No chord names file provided\n";
 
-open(my $ly, ">", "chords.ly");
-print $ly <<'EOF';
+my $skip=0;
+my $chords_file="";
+my $music="";
+my $output="";
+
+my %args = (
+	    "-s" => sub {
+	      $skip=1;
+	      return shift;
+	    },
+	    "-c" => sub {
+	      my @argv = @${\shift};
+	      $chords_file = shift @argv or die "Missing argument to -c";
+	      return \@argv;
+	    },
+	    "-o" => sub {
+	      $output = shift @ARGV or die "Missing argument to -o";
+	      return shift;
+	    }
+	   );
+
+while (my $arg = shift) {
+  if (exists $args{$arg}) {
+    @ARGV = @{$args{$arg}->(\@ARGV)};
+  } else {
+    $music = $arg;
+  }
+}
+
+die "No target pdf specified" unless $music;
+
+&generate_chords unless $skip;
+exec('rosin-play.py', grep { !!$_ } $chords_file, $music, $output);
+
+sub generate_chords {
+  open(my $ly, ">", "chords.ly");
+  print $ly <<'EOF';
 \version "2.24.3"
 
 $(load (string-append (getenv "HOME") "/ly/scm/jazzchords.scm"))
@@ -22,10 +56,10 @@ $(load (string-append (getenv "HOME") "/ly/scm/jazzchords.scm"))
 
 EOF
 
-open(my $chords, "<", $chords_file);
-while (<$chords>) {
-  chomp;
-  print $ly <<"BOOK";
+  open(my $chords, "<", $chords_file);
+  while (<$chords>) {
+    chomp;
+    print $ly <<"BOOK";
 \\book {
 \\bookOutputName \"$.\"
   \\markup {
@@ -33,18 +67,19 @@ while (<$chords>) {
   }
 }
 BOOK
-}
-close $chords;
-close $ly;
+  }
+  close $chords;
+  close $ly;
 
-mkdir "pdf" unless -d "pdf";
-system(qw/lilypond -o pdf chords.ly/);
+  mkdir "pdf" unless -d "pdf";
+  system(qw/lilypond -o pdf chords.ly/);
 
-chdir $top . "/pdf";
-opendir my $dir, ".";
-my @pdffiles = map { abs_path $_ } grep { -f } readdir $dir;
-closedir $dir;
+  chdir $top . "/pdf";
+  opendir my $dir, ".";
+  my @pdffiles = map { abs_path $_ } grep { -f } readdir $dir;
+  closedir $dir;
 
-for my $pdf (@pdffiles) {
-  system("pdfcrop", $pdf, $pdf);
+  for my $pdf (@pdffiles) {
+    system("pdfcrop", $pdf, $pdf);
+  }
 }
