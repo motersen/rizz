@@ -1,7 +1,7 @@
 DESTDIR=$(HOME)/bin
 
-install: rosin rosin-tune.pl rosin-play.py
-	install -Dm755 rosin-tune.pl rosin-play.py rosin $(DESTDIR)
+install: rizz rizz-up.py
+	install -Dm755 rizz rizz-up.py $(DESTDIR)
 
 uninstall:
-	rm -rf $(DESTDIR)/rosin-tune.pl $(DESTDIR)/rosin-play.py $(DESTDIR)/rosin
+	rm -rf $(DESTDIR)/rizz $(DESTDIR)/rizz-up.py

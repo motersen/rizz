@@ -41,7 +41,7 @@ while (my $arg = shift) {
 die "No target pdf specified" unless $music;
 
 &generate_chords unless $skip;
-exec('rosin-play.py', grep { !!$_ } $chords_file, $music, $output);
+exec('rizz-up.py', grep { !!$_ } $chords_file, $music, $output);
 
 sub generate_chords {
   open(my $ly, ">", "chords.ly");
