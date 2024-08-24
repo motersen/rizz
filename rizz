@@ -78,6 +78,7 @@ BOOK
   opendir my $dir, ".";
   my @pdffiles = map { abs_path $_ } grep { -f } readdir $dir;
   closedir $dir;
+  chdir $top;
 
   for my $pdf (@pdffiles) {
     system("pdfcrop", $pdf, $pdf);
